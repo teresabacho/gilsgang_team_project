@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #F8FBFF
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E75B6
+  FontSize 12
+}
+skinparam actor {
+  BackgroundColor #1F4E79
+  FontColor #1F4E79
+  BorderColor #1F4E79
+}
+skinparam ArrowColor #2E75B6
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam titleFontSize 16
+skinparam titleFontColor #1F4E79
+
+title Діаграма 1: Автентифікація та Профіль — MovieMapUA
+
+left to right direction
+
+actor "Незареєстрований\nкористувач" as Guest #E8F6E8
+actor "Зареєстрований\nкористувач" as User #FFF3E0
+
+rectangle "MovieMapUA" {
+  usecase "UC-01\nРеєстрація" as UC01
+  usecase "UC-02\nВхід в систему" as UC02
+  usecase "UC-03\nВихід з системи" as UC03
+  usecase "UC-04\nПерегляд профілю" as UC04
+  usecase "UC-05\nРедагування профілю" as UC05
+  usecase "UC-06\nВалідація даних" as UC06
+  usecase "UC-07\nВидача JWT-токена" as UC07
+  usecase "UC-08\nПовідомлення\nпро помилку" as UC08
+}
+
+Guest --> UC01
+Guest --> UC02
+
+User --> UC02
+User --> UC03
+User --> UC04
+User --> UC05
+
+UC01 .> UC06 : <<include>>
+UC02 .> UC07 : <<include>>
+UC05 .> UC06 : <<include>>
+UC01 .> UC08 : <<extend>>
+UC02 .> UC08 : <<extend>>
+UC05 .> UC08 : <<extend>>
+
+@enduml

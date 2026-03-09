@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #F8FBFF
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E75B6
+  FontSize 12
+}
+skinparam actor {
+  BackgroundColor #1F4E79
+  FontColor #1F4E79
+  BorderColor #1F4E79
+}
+skinparam ArrowColor #2E75B6
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam titleFontSize 16
+skinparam titleFontColor #1F4E79
+
+title Діаграма 5: Рекомендації та Коментарі — MovieMapUA
+
+left to right direction
+
+actor "Незареєстрований\nкористувач" as Guest #E8F6E8
+actor "Зареєстрований\nкористувач" as User #FFF3E0
+actor "TripAdvisor API" as TripAdvisor #E8E8F8
+
+rectangle "MovieMapUA" {
+  usecase "UC-38\nПерегляд рекомендацій\nготелів" as UC38
+  usecase "UC-39\nПерегляд рекомендацій\nекскурсій" as UC39
+  usecase "UC-40\nПерехід на\nTripAdvisor" as UC40
+  usecase "UC-41\nЗавантаження даних\nз TripAdvisor API" as UC41
+  usecase "UC-42\nПерегляд коментарів\nдо фільму" as UC42
+  usecase "UC-43\nДодавання\nкоментаря" as UC43
+  usecase "UC-44\nВалідація\nкоментаря" as UC44
+}
+
+Guest --> UC42
+Guest --> UC40
+
+User --> UC38
+User --> UC39
+User --> UC40
+User --> UC42
+User --> UC43
+
+TripAdvisor --> UC41
+
+UC38 .> UC41 : <<include>>
+UC39 .> UC41 : <<include>>
+UC43 .> UC44 : <<include>>
+
+@enduml

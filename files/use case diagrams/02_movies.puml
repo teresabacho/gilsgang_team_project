@@ -1,0 +1,59 @@
+@startuml
+skinparam backgroundColor #F8FBFF
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E75B6
+  FontSize 12
+}
+skinparam actor {
+  BackgroundColor #1F4E79
+  FontColor #1F4E79
+  BorderColor #1F4E79
+}
+skinparam ArrowColor #2E75B6
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam titleFontSize 16
+skinparam titleFontColor #1F4E79
+
+title Діаграма 2: Перегляд та Управління Фільмами — MovieMapUA
+
+left to right direction
+
+actor "Незареєстрований\nкористувач" as Guest #E8F6E8
+actor "Зареєстрований\nкористувач" as User #FFF3E0
+
+rectangle "MovieMapUA" {
+  usecase "UC-09\nПерегляд списку\nфільмів" as UC09
+  usecase "UC-10\nПошук фільму\nза назвою" as UC10
+  usecase "UC-11\nФільтрація за\nроком" as UC11
+  usecase "UC-12\nФільтрація за\nжанром" as UC12
+  usecase "UC-13\nПерегляд деталей\nфільму" as UC13
+  usecase "UC-14\nДодавання\nфільму" as UC14
+  usecase "UC-15\nРедагування\nфільму" as UC15
+  usecase "UC-16\nВидалення\nфільму" as UC16
+  usecase "UC-17\nГеокодинг\nлокації" as UC17
+  usecase "UC-18\nВалідація форми\nфільму" as UC18
+}
+
+Guest --> UC09
+Guest --> UC10
+Guest --> UC11
+Guest --> UC12
+Guest --> UC13
+
+User --> UC09
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+
+UC14 .> UC17 : <<include>>
+UC14 .> UC18 : <<include>>
+UC15 .> UC18 : <<include>>
+UC15 .> UC16 : <<extend>>
+
+@enduml

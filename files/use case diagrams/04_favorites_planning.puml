@@ -1,0 +1,54 @@
+@startuml
+skinparam backgroundColor #F8FBFF
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E75B6
+  FontSize 12
+}
+skinparam actor {
+  BackgroundColor #1F4E79
+  FontColor #1F4E79
+  BorderColor #1F4E79
+}
+skinparam ArrowColor #2E75B6
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam titleFontSize 16
+skinparam titleFontColor #1F4E79
+
+title Діаграма 4: Обране та Планування Подорожі — MovieMapUA
+
+left to right direction
+
+actor "Зареєстрований\nкористувач" as User #FFF3E0
+
+rectangle "MovieMapUA" {
+  usecase "UC-28\nДодавання фільму\nв обране" as UC28
+  usecase "UC-29\nДодавання маршруту\nв обране" as UC29
+  usecase "UC-30\nДодавання готелю\nв обране" as UC30
+  usecase "UC-31\nДодавання екскурсії\nв обране" as UC31
+  usecase "UC-32\nПерегляд списку\nобраного" as UC32
+  usecase "UC-33\nВидалення з\nобраного" as UC33
+  usecase "UC-34\nСтворення групи\nподорожі" as UC34
+  usecase "UC-35\nРедагування групи\nподорожі" as UC35
+  usecase "UC-36\nВидалення групи\nподорожі" as UC36
+  usecase "UC-37\nПерегляд груп\nподорожей" as UC37
+}
+
+User --> UC28
+User --> UC29
+User --> UC30
+User --> UC31
+User --> UC32
+User --> UC33
+User --> UC34
+User --> UC35
+User --> UC36
+User --> UC37
+
+UC34 .> UC32 : <<include>>
+UC35 .> UC32 : <<include>>
+UC33 .> UC32 : <<include>>
+UC36 .> UC37 : <<extend>>
+
+@enduml

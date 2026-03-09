@@ -1,0 +1,60 @@
+@startuml
+skinparam backgroundColor #F8FBFF
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E75B6
+  FontSize 12
+}
+skinparam actor {
+  BackgroundColor #1F4E79
+  FontColor #1F4E79
+  BorderColor #1F4E79
+}
+skinparam ArrowColor #2E75B6
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam titleFontSize 16
+skinparam titleFontColor #1F4E79
+
+title Діаграма 3: Карта Локацій та Маршрути — MovieMapUA
+
+left to right direction
+
+actor "Незареєстрований\nкористувач" as Guest #E8F6E8
+actor "Зареєстрований\nкористувач" as User #FFF3E0
+
+rectangle "MovieMapUA" {
+  usecase "UC-19\nПерегляд карти\nлокацій (Leaflet)" as UC19
+  usecase "UC-20\nНатискання на\nмаркер локації" as UC20
+  usecase "UC-21\nМасштабування\nкарти" as UC21
+  usecase "UC-22\nКластеризація\nмаркерів" as UC22
+  usecase "UC-23\nПанорамування\nкарти" as UC23
+  usecase "UC-24\nПерегляд списку\nмаршрутів" as UC24
+  usecase "UC-25\nПокроковий\nперегляд маршруту" as UC25
+  usecase "UC-26\nВідображення\nмаршруту на карті" as UC26
+  usecase "UC-27\nДодавання маршруту\nв обране" as UC27
+}
+
+Guest --> UC19
+Guest --> UC20
+Guest --> UC21
+Guest --> UC22
+Guest --> UC23
+Guest --> UC24
+Guest --> UC25
+
+User --> UC19
+User --> UC20
+User --> UC21
+User --> UC22
+User --> UC23
+User --> UC24
+User --> UC25
+User --> UC27
+
+UC19 .> UC22 : <<include>>
+UC24 .> UC26 : <<include>>
+UC25 .> UC26 : <<include>>
+UC27 .> UC25 : <<include>>
+
+@enduml

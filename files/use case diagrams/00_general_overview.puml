@@ -1,0 +1,153 @@
+@startuml
+skinparam backgroundColor #F8FBFF
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E75B6
+  FontSize 11
+}
+skinparam actor {
+  BackgroundColor #1F4E79
+  FontColor #1F4E79
+  BorderColor #1F4E79
+  FontSize 12
+}
+skinparam ArrowColor #2E75B6
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam titleFontSize 18
+skinparam titleFontColor #1F4E79
+skinparam packageBackgroundColor #EBF3FB
+skinparam packageBorderColor #2E75B6
+skinparam packageFontColor #1F4E79
+skinparam packageFontSize 13
+skinparam packageFontStyle bold
+
+title Загальна Use Case Діаграма — MovieMapUA
+
+left to right direction
+
+actor "Незареєстрований\nкористувач" as Guest #E8F6E8
+actor "Зареєстрований\nкористувач" as User #FFF3E0
+actor "TripAdvisor API" as TripAdvisor #E8E8F8
+
+rectangle "MovieMapUA" {
+
+  package "Автентифікація" {
+    usecase "Реєстрація" as UC01
+    usecase "Вхід в систему" as UC02
+    usecase "Вихід з системи" as UC03
+  }
+
+  package "Профіль" {
+    usecase "Перегляд профілю" as UC04
+    usecase "Редагування профілю" as UC05
+  }
+
+  package "Фільми" {
+    usecase "Перегляд списку фільмів" as UC06
+    usecase "Пошук фільму" as UC07
+    usecase "Фільтрація (рік / жанр)" as UC08
+    usecase "Перегляд деталей фільму" as UC09
+    usecase "Додавання фільму" as UC10
+    usecase "Редагування фільму" as UC11
+    usecase "Видалення фільму" as UC12
+  }
+
+  package "Карта та Маршрути" {
+    usecase "Перегляд карти локацій" as UC13
+    usecase "Взаємодія з маркером" as UC14
+    usecase "Масштабування / панорамування" as UC15
+    usecase "Перегляд маршрутів" as UC16
+    usecase "Покроковий огляд маршруту" as UC17
+  }
+
+  package "Обране та Планування" {
+    usecase "Додавання в обране" as UC18
+    usecase "Перегляд обраного" as UC19
+    usecase "Видалення з обраного" as UC20
+    usecase "Створення групи подорожі" as UC21
+    usecase "Редагування групи подорожі" as UC22
+  }
+
+  package "Рекомендації" {
+    usecase "Перегляд готелів поблизу" as UC23
+    usecase "Перегляд екскурсій поблизу" as UC24
+    usecase "Перехід на TripAdvisor" as UC25
+  }
+
+  package "Коментарі" {
+    usecase "Перегляд коментарів" as UC26
+    usecase "Додавання коментаря" as UC27
+  }
+
+  package "Навігація та інше" {
+    usecase "Головна сторінка" as UC28
+    usecase "Сторінка «Про нас»" as UC29
+    usecase "Зворотний зв'язок" as UC30
+  }
+
+}
+
+' --- Guest ---
+Guest --> UC01
+Guest --> UC02
+Guest --> UC06
+Guest --> UC07
+Guest --> UC08
+Guest --> UC09
+Guest --> UC13
+Guest --> UC14
+Guest --> UC15
+Guest --> UC16
+Guest --> UC17
+Guest --> UC26
+Guest --> UC28
+Guest --> UC29
+Guest --> UC30
+
+' --- User ---
+User --> UC02
+User --> UC03
+User --> UC04
+User --> UC05
+User --> UC06
+User --> UC07
+User --> UC08
+User --> UC09
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+User --> UC17
+User --> UC18
+User --> UC19
+User --> UC20
+User --> UC21
+User --> UC22
+User --> UC23
+User --> UC24
+User --> UC25
+User --> UC26
+User --> UC27
+User --> UC28
+User --> UC29
+User --> UC30
+
+' --- TripAdvisor ---
+TripAdvisor --> UC23
+TripAdvisor --> UC24
+
+' --- include / extend ---
+UC10 .> UC06 : <<include>>
+UC18 .> UC16 : <<include>>
+UC21 .> UC19 : <<include>>
+UC23 .> UC16 : <<include>>
+UC24 .> UC16 : <<include>>
+
+UC11 .> UC12 : <<extend>>
+UC22 .> UC21 : <<extend>>
+
+@enduml

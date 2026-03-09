@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #F8FBFF
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E75B6
+  FontSize 12
+}
+skinparam actor {
+  BackgroundColor #1F4E79
+  FontColor #1F4E79
+  BorderColor #1F4E79
+}
+skinparam ArrowColor #2E75B6
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam titleFontSize 16
+skinparam titleFontColor #1F4E79
+
+title Діаграма 6: Навігація, Пошук та Зворотний Зв'язок — MovieMapUA
+
+left to right direction
+
+actor "Незареєстрований\nкористувач" as Guest #E8F6E8
+actor "Зареєстрований\nкористувач" as User #FFF3E0
+
+rectangle "MovieMapUA" {
+  usecase "UC-45\nПерегляд головної\nсторінки" as UC45
+  usecase "UC-46\nПерегляд новинок\nкіно" as UC46
+  usecase "UC-47\nНавігація через\nHeader/Footer" as UC47
+  usecase "UC-48\nПерегляд сторінки\n«Про нас»" as UC48
+  usecase "UC-49\nВідправка відгуку\nпро застосунок" as UC49
+  usecase "UC-50\nВалідація форми\nвідгуку" as UC50
+  usecase "UC-51\nПерегляд сторінки\n404" as UC51
+}
+
+Guest --> UC45
+Guest --> UC46
+Guest --> UC47
+Guest --> UC48
+Guest --> UC49
+Guest --> UC51
+
+User --> UC45
+User --> UC46
+User --> UC47
+User --> UC48
+User --> UC49
+
+UC45 .> UC46 : <<include>>
+UC49 .> UC50 : <<include>>
+
+@enduml
