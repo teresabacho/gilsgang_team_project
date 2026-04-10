@@ -1,0 +1,283 @@
+.routes-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 600px;
+}
+.left-panel {
+    width: 33%;
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 1px solid #ccc;
+
+}
+.map-wrapper {
+    width: 67%;
+    height: 600px;
+}
+
+.custom-routing-container {
+
+    font-size: 14px;
+    margin-bottom: 30px;
+    padding: 10px;
+
+    border-radius: 8px;
+
+}
+
+
+.routing-group-title {
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+
+}
+
+
+
+.suggestion-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: white;
+    max-height: fit-content;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+    transition: box-shadow 0.3s ease;
+    border: 1px solid white;
+    box-sizing: border-box;
+}
+.suggestion-photo {
+    width: 100%;
+    max-height: 200px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.suggestion-photo img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.suggestion-content {
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.suggestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.suggestion-header strong {
+    font-size: 1.1rem;
+}
+
+.suggestion-address {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.suggestion-rating {
+    font-size: 0.9rem;
+}
+
+.favorite-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+
+
+.routing-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #006D77;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: white;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.routing-header img {
+    transition: transform 0.2s;
+}
+
+.routing-header img:hover {
+    transform: scale(1.1);
+}
+.suggestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.favorite-icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.favorite-icon:hover {
+    transform: scale(1.1);
+}
+
+.leaflet-routing-container {
+    width: 100% !important;
+    margin-bottom: 30px;
+
+}
+
+.auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.auth-modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.auth-modal-header {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.auth-modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #6b7280;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.auth-modal-close:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.auth-modal-content {
+    padding: 24px;
+}
+
+.auth-modal-content p {
+    margin: 0 0 24px;
+    color: #6b7280;
+    line-height: 1.5;
+    text-align: center;
+}
+
+
+.auth-modal-divider {
+    text-align: center;
+    margin: 8px 0;
+}
+
+.auth-modal-divider span {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .auth-modal {
+        margin: 20px;
+        max-width: none;
+    }
+
+    .auth-modal-header,
+    .auth-modal-content {
+        padding: 20px;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .routes-wrapper {
+        flex-direction: column;
+        height: auto;
+        min-height: calc(100vh - 80px);
+    }
+
+    .left-panel {
+        width: 100%;
+        max-height: 400px;
+        order: 2;
+    }
+
+    .map-wrapper {
+        width: 100%;
+        height: 400px;
+        order: 1;
+    }
+
+    .suggestion-card {
+        padding: 10px;
+    }
+
+    .suggestion-photo {
+        max-height: 120px;
+    }
+
+    .suggestion-photo img {
+        height: 100px;
+    }
+}
