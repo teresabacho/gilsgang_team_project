@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest --forceExit"
+    "test": "jest --forceExit",
+    "test:coverage": "jest --coverage --runInBand --forceExit"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
