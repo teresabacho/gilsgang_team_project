@@ -1,0 +1,242 @@
+.index-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.hero-container {
+    width: 100%;
+    height: auto;
+    background: #006D77;
+    mix-blend-mode: normal;
+    flex: 1;
+}
+.container-text {
+    height: 100vh;
+}
+.container-text h2 {
+    width: 625px;
+    height: 180px;
+    left: 41px;
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 65px;
+    line-height: 90px;
+    text-align: center;
+    text-transform: capitalize;
+    color: #EDF6F9;
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+
+.container-text p {
+    width: 500px;
+    height: 132px;
+    left: 96px;
+    top: 210px;
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 27px;
+    line-height: 44px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.c-button {
+    width: 350px;
+    height: 80px;
+    left: 157px;
+    top: 390px;
+    background: #E29578;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 44px;
+    color: #EDF6F9;
+    margin: 0;
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.c-button:active {
+    transform: scale(0.85);
+    border: 1.5px solid #FFDDD2 !important;
+    background-color: #FFDDD2 !important;
+    color: rgb(255, 255, 255);
+}
+
+.c-button:hover {
+    transform: scale(1.2);
+    background-color: #FFDDD2 !important;
+    border: 1.5px solid #FFDDD2;
+}
+
+.image-1 {
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    left: 690px;
+    top: 120px;
+    border-radius: 9px;
+}
+
+.image-2 {
+    position: absolute;
+    width: 374px;
+    height: 410px;
+    left: 810px;
+    top: 174px;
+    object-fit: contain;
+}
+
+.searchbar {
+    position: relative;
+    width: 100%;
+    height: 534px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #83C5BE;
+    color: #EDF6F9;
+}
+
+.searchbar p {
+    width: 90%;
+    height: 180px;
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 90px;
+    text-align: center;
+    text-transform: capitalize;
+    color: #EDF6F9;
+    margin-top: 0;
+}
+
+.searchbar form {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+}
+
+.searchInput {
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 36px;
+    line-height: 44px;
+    color: #E29578;
+    width: 80%;
+    height: 120px;
+    padding-left: 30px;
+    background: #FFDDD2;
+    border-radius: 50px;
+}
+
+.cards {
+    width: 100%;
+    height: auto;
+    background: #006D77;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+
+}
+
+.cards p {
+    width: 100%;
+    text-align: center;
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 90px;
+    text-transform: capitalize;
+    color: #EDF6F9;
+    margin-top: 20px;
+    margin-bottom: 30px;
+
+}
+
+.card {
+    background: #EDF6F9;
+    border-radius: 30px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
+
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-image {
+    width: 100%;
+    height: auto;
+    max-width: 300px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.card h1 {
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 44px;
+    color: #000000;
+    margin: 0;
+    text-decoration: none;
+}
+
+.card p {
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 24px;
+    line-height: 32px;
+    color: #000000;
+    margin: 20px 0 0 0;
+    text-decoration: none;
+}
+
+.footer-container {
+    background: #006D77;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: auto;
+}
+
+footer p {
+    font-family: 'Outfit', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 45px;
+    color: #EDF6F9;
+}
+ .text-wrap {
+     width: 50%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
