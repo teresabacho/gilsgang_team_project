@@ -25,8 +25,8 @@ app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(cors({
     credentials: true,
-    origin: "https://darynaa7-gilsgangteamproject1.vercel.app/"
-    // origin: 'http://localhost:3000'
+    //origin: "https://darynaa7-gilsgangteamproject1.vercel.app/"
+    origin: 'http://localhost:3000'
 }));
 app.use("/api/auth", authRoute);
 app.use("/api/movie", movieRoute);
