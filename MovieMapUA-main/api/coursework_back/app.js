@@ -46,7 +46,7 @@ const connect = async () => {
     }
 };
 
-const PORT =  5000;
+const PORT = process.env.PORT || 5000;
 app.set('port', PORT);
 
 app.get('/test', (req, res) => {
