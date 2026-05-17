@@ -9,7 +9,7 @@ const {
     deleteMovie,
     getLatestMovies,
 } = require("../controllers/movie");
-const authMiddleware = require('../controllers/AuthMiddleware');
+const authMiddleware = require('../controllers/authMiddleware');
 
 const router = express.Router();
 
