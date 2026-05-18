@@ -1,0 +1,72 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  deploy-backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ github.ref_name == 'master' && 'production' || 'staging' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install backend dependencies
+        working-directory: api/coursework_back
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: api/coursework_back
+        run: npm test --if-present
+
+      - name: Build backend
+        working-directory: api/coursework_back
+        run: npm run build --if-present
+
+      - name: Trigger Render Backend Deploy
+        run: |
+          curl -X POST ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}
+
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ github.ref_name == 'master' && 'production' || 'staging' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        working-directory: client/coursework_front
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: client/coursework_front
+        run: npm test --if-present
+
+      - name: Build frontend
+        working-directory: client/coursework_front
+        run: npm run build
+
+      - name: Trigger Render Frontend Deploy
+        run: |
+          curl -X POST ${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}
