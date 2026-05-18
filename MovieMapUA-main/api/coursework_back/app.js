@@ -23,11 +23,32 @@ require('dotenv').config();
 app.use(express.json());
 app.use(cookieParser())
 app.use(bodyParser.json());
+// app.use(cors({
+//     credentials: true,
+//     origin: true
+//     //origin: 'http://localhost:3000'
+// }));
+
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://darynaa7-gilsgangteamproject1.vercel.app',
+];
+
 app.use(cors({
     credentials: true,
-    origin: true
-    //origin: 'http://localhost:3000'
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
 }));
+
+
 app.use("/api/auth", authRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/location", locationRoute);
