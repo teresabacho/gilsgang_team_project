@@ -17,7 +17,8 @@ import FavoritesPage from './pages/FavoritesPage';
 import RouteDetailsPage from './pages/RouteDetailsPage';
 
 axios.defaults.baseURL =
-    process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    process.env.REACT_APP_API_URL;
+//|| 'http://localhost:5000'
 // axios.defaults.baseURL = 'http://localhost:5000';
 axios.defaults.withCredentials = true;
 
