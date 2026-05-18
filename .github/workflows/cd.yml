@@ -69,7 +69,7 @@ jobs:
 
       - name: Build frontend
         working-directory: MovieMapUA-main/client/coursework_front
-        run: npm run build --if-present
+        run: CI=false npm run build --if-present
 
       - name: Trigger Render Frontend Deploy
         run: |
