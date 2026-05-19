@@ -99,6 +99,10 @@ app.post('/api/logout', (req,res) => {
     res.cookie('token', '').json(true);
 });
 
+app.get('/api/debug-sentry', (req, res) => {
+    throw new Error('Test Sentry backend error');
+});
+
 if (process.env.SENTRY_DSN) {
     Sentry.setupExpressErrorHandler(app);
 }
