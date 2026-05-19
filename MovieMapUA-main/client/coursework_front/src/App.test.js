@@ -7,6 +7,18 @@
  * - App already contains its own <BrowserRouter> — do NOT wrap it in another router.
  * - Test individual page components directly in MemoryRouter for route-level checks.
  */
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { UserContext } from './context/UserContext';
+import App from './App';
+
+import LoginPage    from './pages/LoginPage';
+import SignupPage   from './pages/SignupPage';
+import MoviesPage   from './pages/MoviesPage';
+import ContactPage  from './pages/ContactPage';
+import AboutPage    from './pages/AboutPage';
+
 
 // App.js directly imports axios to set defaults — mock it so the ESM parse error
 // doesn't blow up the test suite.
@@ -47,17 +59,6 @@ jest.mock('./pages/RoutesPage',       () => () => <div>Routes Page</div>);
 jest.mock('./pages/FavoritesPage',    () => () => <div>Favorites Page</div>);
 jest.mock('./pages/RouteDetailsPage', () => () => <div>Route Details Page</div>);
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { UserContext } from './context/UserContext';
-import App from './App';
-
-import LoginPage    from './pages/LoginPage';
-import SignupPage   from './pages/SignupPage';
-import MoviesPage   from './pages/MoviesPage';
-import ContactPage  from './pages/ContactPage';
-import AboutPage    from './pages/AboutPage';
 
 const mockCtx = { user: null, setUser: jest.fn(), ready: true };
 

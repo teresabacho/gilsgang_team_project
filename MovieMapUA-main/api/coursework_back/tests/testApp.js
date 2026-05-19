@@ -15,6 +15,7 @@ const locationRoute = require('../routes/location');
 const userRoute = require('../routes/users');
 const commentRoute = require('../routes/comment');
 const favoriteRoutes = require('../routes/favorite');
+const healthRoute = require('../routes/health');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api/location', locationRoute);
 app.use('/api/user', userRoute);
 app.use('/api/comments', commentRoute);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/health', healthRoute);
 
 app.get('/test', (req, res) => {
   res.json('test ok');

@@ -1,0 +1,94 @@
+name: CD Pipeline
+
+on:
+  workflow_call:
+
+jobs:
+
+  deploy-backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render Backend Deploy
+        run: |
+          if [ "${{ github.event.workflow_run.head_branch }}" = "master" ]; then
+            curl -X POST ${{ secrets.RENDER_BACKEND_PRODUCTION_HOOK }}
+          else
+            curl -X POST ${{ secrets.RENDER_BACKEND_STAGING_HOOK }}
+          fi
+
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render Frontend Deploy
+        run: |
+          if [ "${{ github.event.workflow_run.head_branch }}" = "master" ]; then
+            curl -X POST ${{ secrets.RENDER_FRONTEND_PRODUCTION_HOOK }}
+          else
+            curl -X POST ${{ secrets.RENDER_FRONTEND_STAGING_HOOK }}
+          fi
+
+  smoke-tests:
+    name: Smoke Tests
+    needs: [deploy-backend, deploy-frontend]
+    runs-on: ubuntu-latest
+
+    env:
+      BACKEND_STAGING_URL: https://gilsgang-team-project-staging-server.onrender.com
+      BACKEND_PRODUCTION_URL: https://gilsgang-team-project.onrender.com
+      FRONTEND_STAGING_URL: https://gilsgang-team-project-staging-client.onrender.com
+      FRONTEND_PRODUCTION_URL: https://gilsgang-team-project-1.onrender.com
+
+    steps:
+      - name: Resolve target environment
+        id: target
+        run: |
+          # NOTE: mirrors the (currently broken) branch-detection in deploy-* jobs above.
+          # workflow_run.head_branch is empty in workflow_call context, so this always
+          # resolves to staging. See docs/CD-PROCESS.md → "Known issues".
+          if [ "${{ github.event.workflow_run.head_branch }}" = "master" ]; then
+            echo "backend=$BACKEND_PRODUCTION_URL" >> "$GITHUB_OUTPUT"
+            echo "frontend=$FRONTEND_PRODUCTION_URL" >> "$GITHUB_OUTPUT"
+            echo "env=production" >> "$GITHUB_OUTPUT"
+          else
+            echo "backend=$BACKEND_STAGING_URL" >> "$GITHUB_OUTPUT"
+            echo "frontend=$FRONTEND_STAGING_URL" >> "$GITHUB_OUTPUT"
+            echo "env=staging" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Wait for backend /api/health
+        run: |
+          backend="${{ steps.target.outputs.backend }}"
+          echo "Polling $backend/api/health (env: ${{ steps.target.outputs.env }})"
+          for i in $(seq 1 30); do
+            body=$(curl -fsS --max-time 10 "$backend/api/health" || echo "")
+            if echo "$body" | grep -q '"status":"ok"'; then
+              echo "Backend healthy after attempt $i"
+              echo "$body"
+              exit 0
+            fi
+            echo "Attempt $i/30: not ready, sleeping 15s..."
+            sleep 15
+          done
+          echo "Backend never reported status=ok within ~7.5 minutes"
+          curl -i "$backend/api/health" || true
+          exit 1
+
+      - name: Verify frontend serves HTML
+        run: |
+          frontend="${{ steps.target.outputs.frontend }}"
+          echo "Checking $frontend"
+          for i in $(seq 1 20); do
+            status=$(curl -s -o /tmp/page.html -w "%{http_code}" --max-time 10 "$frontend" || echo "000")
+            if [ "$status" = "200" ] && grep -q 'id="root"' /tmp/page.html; then
+              echo "Frontend serving HTML with #root after attempt $i"
+              exit 0
+            fi
+            echo "Attempt $i/20: HTTP $status, sleeping 15s..."
+            sleep 15
+          done
+          echo "Frontend did not serve expected content within ~5 minutes"
+          exit 1

@@ -1,13 +1,15 @@
 {
   "name": "coursework-back",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "jest --forceExit",
-    "test:coverage": "jest --coverage --runInBand --forceExit"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint ."
   },
   "dependencies": {
+    "@sentry/node": "^10.53.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "~1.4.4",
@@ -26,7 +28,8 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "jest": "^30.3.0",
+    "eslint": "^10.4.0",
+    "jest": "^30.4.2",
     "mongodb-memory-server": "^10.4.3",
     "supertest": "^7.2.2"
   }
