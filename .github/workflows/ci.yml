@@ -87,5 +87,5 @@ jobs:
     name: Call CD Pipeline
     needs: [backend-ci, frontend-ci]
     if: github.event_name == 'push'
-    uses: ./.github/workflows/cd.yml@develop
+    uses: ./.github/workflows/cd.yml
     secrets: inherit
