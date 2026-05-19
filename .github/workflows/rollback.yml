@@ -1,0 +1,171 @@
+name: Manual Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to rollback to (e.g. v1.0.0)'
+        required: true
+        type: string
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      target:
+        description: 'Which service(s) to rollback'
+        required: true
+        type: choice
+        default: both
+        options:
+          - backend
+          - frontend
+          - both
+
+jobs:
+
+  validate-tag:
+    name: Validate tag exists
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve tag to SHA
+        id: resolve
+        run: |
+          tag="${{ inputs.tag }}"
+          if ! git rev-parse "refs/tags/${tag}" >/dev/null 2>&1; then
+            echo "::error::Tag '${tag}' not found in repository."
+            echo "Available tags:"
+            git tag -l | tail -20
+            exit 1
+          fi
+          sha=$(git rev-parse "refs/tags/${tag}")
+          echo "Resolved ${tag} -> ${sha}"
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+
+      - name: Announce rollback
+        run: |
+          echo "Rolling back ${{ inputs.target }} on ${{ inputs.environment }} to ${{ inputs.tag }} (${{ steps.resolve.outputs.sha }})"
+          echo "Triggered by: ${{ github.actor }}"
+
+  rollback-backend:
+    name: Rollback backend
+    needs: validate-tag
+    if: inputs.target == 'backend' || inputs.target == 'both'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render backend deploy at tag
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            hook="${{ secrets.RENDER_BACKEND_PRODUCTION_HOOK }}"
+          else
+            hook="${{ secrets.RENDER_BACKEND_STAGING_HOOK }}"
+          fi
+          sha="${{ needs.validate-tag.outputs.sha }}"
+          # Render deploy hooks accept ?ref=<sha-or-branch>; append correctly
+          # depending on whether the hook URL already has a query string.
+          if [[ "$hook" == *\?* ]]; then
+            url="${hook}&ref=${sha}"
+          else
+            url="${hook}?ref=${sha}"
+          fi
+          echo "POST <render-hook>?...&ref=${sha}"
+          curl -fsS -X POST "$url"
+
+  rollback-frontend:
+    name: Rollback frontend
+    needs: validate-tag
+    if: inputs.target == 'frontend' || inputs.target == 'both'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render frontend deploy at tag
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            hook="${{ secrets.RENDER_FRONTEND_PRODUCTION_HOOK }}"
+          else
+            hook="${{ secrets.RENDER_FRONTEND_STAGING_HOOK }}"
+          fi
+          sha="${{ needs.validate-tag.outputs.sha }}"
+          if [[ "$hook" == *\?* ]]; then
+            url="${hook}&ref=${sha}"
+          else
+            url="${hook}?ref=${sha}"
+          fi
+          echo "POST <render-hook>?...&ref=${sha}"
+          curl -fsS -X POST "$url"
+
+  verify-rollback:
+    name: Verify rollback (smoke)
+    needs: [validate-tag, rollback-backend, rollback-frontend]
+    if: ${{ !cancelled() && !failure() }}
+    runs-on: ubuntu-latest
+
+    env:
+      BACKEND_STAGING_URL: https://gilsgang-team-project-staging-server.onrender.com
+      BACKEND_PRODUCTION_URL: https://gilsgang-team-project.onrender.com
+      FRONTEND_STAGING_URL: https://gilsgang-team-project-staging-client.onrender.com
+      FRONTEND_PRODUCTION_URL: https://gilsgang-team-project-1.onrender.com
+
+    steps:
+      - name: Resolve target URLs
+        id: target
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            echo "backend=$BACKEND_PRODUCTION_URL" >> "$GITHUB_OUTPUT"
+            echo "frontend=$FRONTEND_PRODUCTION_URL" >> "$GITHUB_OUTPUT"
+          else
+            echo "backend=$BACKEND_STAGING_URL" >> "$GITHUB_OUTPUT"
+            echo "frontend=$FRONTEND_STAGING_URL" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Wait for backend /api/health
+        if: inputs.target == 'backend' || inputs.target == 'both'
+        run: |
+          backend="${{ steps.target.outputs.backend }}"
+          echo "Polling $backend/api/health"
+          for i in $(seq 1 30); do
+            body=$(curl -fsS --max-time 10 "$backend/api/health" || echo "")
+            if echo "$body" | grep -q '"status":"ok"'; then
+              echo "Backend healthy after attempt $i"
+              echo "$body"
+              exit 0
+            fi
+            echo "Attempt $i/30: not ready, sleeping 15s..."
+            sleep 15
+          done
+          echo "Backend did not become healthy within ~7.5 minutes"
+          curl -i "$backend/api/health" || true
+          exit 1
+
+      - name: Verify frontend serves HTML
+        if: inputs.target == 'frontend' || inputs.target == 'both'
+        run: |
+          frontend="${{ steps.target.outputs.frontend }}"
+          for i in $(seq 1 20); do
+            status=$(curl -s -o /tmp/page.html -w "%{http_code}" --max-time 10 "$frontend" || echo "000")
+            if [ "$status" = "200" ] && grep -q 'id="root"' /tmp/page.html; then
+              echo "Frontend OK after attempt $i"
+              exit 0
+            fi
+            echo "Attempt $i/20: HTTP $status, sleeping 15s..."
+            sleep 15
+          done
+          echo "Frontend did not serve expected content within ~5 minutes"
+          exit 1
+
+      - name: Rollback summary
+        if: always()
+        run: |
+          echo "## Rollback summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag:** ${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment:** ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target:** ${{ inputs.target }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **SHA:** ${{ needs.validate-tag.outputs.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY

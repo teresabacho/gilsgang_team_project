@@ -1,16 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import * as Sentry from '@sentry/react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 //import { AuthContextProvider } from "./context/AuthContext";
 
+if (process.env.REACT_APP_SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+    environment: process.env.REACT_APP_ENV || 'development',
+    release: process.env.REACT_APP_VERSION,
+    tracesSampleRate: 0.1,
+  });
+}
+
+const fallback = (
+  <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <h2>Something went wrong.</h2>
+    <p>The team has been notified. Please refresh the page.</p>
+  </div>
+);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-
-    <App />
-
+    <Sentry.ErrorBoundary fallback={fallback}>
+      <App />
+    </Sentry.ErrorBoundary>
   // </React.StrictMode>
 );
 

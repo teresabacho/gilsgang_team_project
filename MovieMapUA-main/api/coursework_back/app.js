@@ -1,3 +1,5 @@
+require('./instrument');
+const Sentry = require('@sentry/node');
 
 const express = require('express');
 const app = express();
@@ -15,6 +17,7 @@ const {verify} = require("jsonwebtoken");
 const bodyParser = require('body-parser');
 const suggestionsRoute = require('./routes/suggestions');
 const favoriteRoutes = require('./routes/favorite');
+const healthRoute = require('./routes/health');
 
 
 
@@ -57,6 +60,7 @@ app.use('/api/comments', commentRoute);
 app.use('/api/contact', contactRoute);
 app.use('/api/suggestions', suggestionsRoute);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/health', healthRoute);
 
 
 const connect = async () => {
@@ -94,6 +98,11 @@ app.get('/api/profile', (req,res) => {
 app.post('/api/logout', (req,res) => {
     res.cookie('token', '').json(true);
 });
+
+if (process.env.SENTRY_DSN) {
+    Sentry.setupExpressErrorHandler(app);
+}
+
 app.listen(PORT, () => {
     connect();
     console.log(`Server is running on port ${PORT}`);
