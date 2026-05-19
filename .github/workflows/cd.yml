@@ -1,39 +1,36 @@
 name: CD Pipeline
 
 on:
-  push:
-    branches:
-      - master
-      - develop
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
 
 jobs:
+
   deploy-backend:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Deploy Backend
     runs-on: ubuntu-latest
-
-    environment:
-      name: ${{ github.ref_name == 'master' && 'production' || 'staging' }}
 
     steps:
       - name: Trigger Render Backend Deploy
         run: |
-          if [ "${{ github.ref_name }}" = "master" ]; then
+          if [ "${{ github.event.workflow_run.head_branch }}" = "master" ]; then
             curl -X POST ${{ secrets.RENDER_BACKEND_PRODUCTION_HOOK }}
           else
             curl -X POST ${{ secrets.RENDER_BACKEND_STAGING_HOOK }}
           fi
 
   deploy-frontend:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Deploy Frontend
     runs-on: ubuntu-latest
-
-    environment:
-      name: ${{ github.ref_name == 'master' && 'production' || 'staging' }}
 
     steps:
       - name: Trigger Render Frontend Deploy
         run: |
-          if [ "${{ github.ref_name }}" = "master" ]; then
+          if [ "${{ github.event.workflow_run.head_branch }}" = "master" ]; then
             curl -X POST ${{ secrets.RENDER_FRONTEND_PRODUCTION_HOOK }}
           else
             curl -X POST ${{ secrets.RENDER_FRONTEND_STAGING_HOOK }}
