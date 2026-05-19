@@ -3,6 +3,9 @@ name: CD Pipeline
 on:
   workflow_run:
     workflows: ["CI Pipeline"]
+    branches:
+      - master
+      - develop
     types:
       - completed
 
