@@ -81,3 +81,11 @@ jobs:
         with:
           name: frontend-coverage
           path: MovieMapUA-main/client/coursework_front/coverage/
+
+
+  run-cd-pipeline:
+    name: Call CD Pipeline
+    needs: [backend-ci, frontend-ci]
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/cd.yml@develop
+    secrets: inherit
