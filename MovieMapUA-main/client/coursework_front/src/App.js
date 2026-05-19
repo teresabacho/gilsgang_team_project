@@ -15,6 +15,7 @@ import AboutPage from "./pages/AboutPage";
 import RoutesPage from "./pages/RoutesPage";
 import FavoritesPage from './pages/FavoritesPage';
 import RouteDetailsPage from './pages/RouteDetailsPage';
+import DebugSentryPage from './pages/DebugSentryPage';
 
 axios.defaults.baseURL =
     process.env.REACT_APP_API_URL;
@@ -43,6 +44,7 @@ function App() {
                 <Route path="/routes" element={<RoutesPage />} />
                 <Route path="/favorites" element={<FavoritesPage />} />
                 <Route path="/route/:routeId" element={<RouteDetailsPage />} />
+                <Route path="/debug-sentry" element={<DebugSentryPage />} />
             </Routes>
         </Router>
         </UserProvider>

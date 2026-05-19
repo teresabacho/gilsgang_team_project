@@ -1,6 +1,6 @@
 {
   "name": "coursework-back",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "start": "node app.js",
@@ -9,6 +9,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@sentry/node": "^10.53.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "~1.4.4",
